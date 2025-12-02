@@ -1,0 +1,138 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <!-- Joint State Publisher -->
+  <xacro:macro name="agv_joints_state_publisher">    
+  	<gazebo>
+         <!-- <plugin name="joint_state_publisher" filename="libgazebo_ros_joint_state_publisher.so">
+            <jointName>caster_front_left_joint,caster_front_right_joint,caster_back_left_joint,caster_back_right_joint,caster_front_left_wheel_joint,caster_front_right_wheel_joint,caster_back_left_wheel_joint,caster_back_right_wheel_joint</jointName>
+            <updateRate>10.0</updateRate>
+            <alwaysOn>true</alwaysOn>
+         </plugin> -->
+
+         <plugin filename="gz-sim-joint-state-publisher-system"
+  name="gz::sim::systems::JointStatePublisher">
+  <topic>joint_states</topic> <!--from <ros><remapping> -->
+  
+</plugin>
+
+
+    </gazebo>
+  </xacro:macro>
+
+  <!-- Differential Drive Plugin-->
+  <xacro:macro name="agv_diff_drive">
+    <gazebo>
+      <!-- <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
+        <rosDebugLevel>Debug</rosDebugLevel>
+        <publishWheelTF>false</publishWheelTF>
+        <publishOdomTF>true</publishOdomTF>
+        <publishWheelJointState>true</publishWheelJointState>
+        <alwaysOn>true</alwaysOn>
+        <leftJoint>wheel_right_base</leftJoint>
+        <rightJoint>wheel_left_base</rightJoint>
+        <wheelSeparation>0.60</wheelSeparation>
+        <wheelDiameter>0.20</wheelDiameter>
+        <wheelTorque>20</wheelTorque>
+        <wheelAcceleration>1.8</wheelAcceleration>
+        <commandTopic>cmd_vel</commandTopic>
+        <odometryTopic>odom</odometryTopic>
+        <odometryFrame>odom</odometryFrame>
+        <odometrySource>world</odometrySource>
+        <robotBaseFrame>base_link</robotBaseFrame>
+	      <legacyMode>true</legacyMode>
+	      <publishTf>true</publishTf>
+        <updateRate>150.0</updateRate>
+      </plugin> -->
+
+
+       <plugin filename="gz-sim-diff-drive-system" name="gz::sim::systems::DiffDrive">
+  <!-- Remove <ros> tag. -->
+
+  <!-- wheels -->
+  <left_joint>wheel_right_base</left_joint>
+  <right_joint>wheel_left_base</right_joint>
+
+  <!-- kinematics -->
+  <wheel_separation>0.60</wheel_separation>
+  <wheel_radius>0.10</wheel_radius> <!-- computed from <wheel_diameter> in the original plugin-->
+
+  <!-- limits -->
+  <max_linear_acceleration>1.8</max_linear_acceleration> <!-- computed from <max_linear_acceleration> in the original plugin-->
+
+  <topic>cmd_vel</topic> <!-- from <commant_topic> -->
+
+  <odom_topic>odom</odom_topic> <!-- from <odometry_topic> -->
+  <frame_id>odom</frame_id> <!-- from <odometry_frame> -->
+  <child_frame_id>base_footprint</child_frame_id> <!-- from <robot_base_frame> -->
+  <odom_publisher_frequency>10.0</odom_publisher_frequency> <!-- from <update_rate>-->
+
+  <tf_topic>/tf</tf_topic> <!-- Short topic name for tf output -->
+
+</plugin>
+</gazebo>
+  </xacro:macro>
+
+   <!-- IMU Plugin -->
+  <xacro:macro name="agv_imu">
+    <gazebo>
+      <!-- <plugin name="imu_plugin" filename="libgazebo_ros_imu.so">
+        <alwaysOn>true</alwaysOn>
+        <bodyName>imu_link</bodyName>
+        <frameName>imu_link</frameName>
+        <topicName>imu</topicName>
+        <serviceName>imu_service</serviceName>
+        <gaussianNoise>0.0</gaussianNoise>
+        <updateRate>200</updateRate>
+        <imu>
+          <noise>
+            <type>gaussian</type>
+            <rate>
+              <mean>0.0</mean>
+              <stddev>2e-4</stddev>
+              <bias_mean>0.0000075</bias_mean>
+              <bias_stddev>0.0000008</bias_stddev>
+            </rate>
+            <accel>
+              <mean>0.0</mean>
+              <stddev>1.7e-2</stddev>
+              <bias_mean>0.1</bias_mean>
+              <bias_stddev>0.001</bias_stddev>
+            </accel>
+          </noise>
+        </imu>
+      </plugin> -->
+
+      <sensor name="tb3_imu" type="imu">
+    <always_on>true</always_on>
+    <update_rate>200</update_rate>
+    <topic>imu</topic>
+    <imu>
+          <noise>
+            <type>gaussian</type>
+            <rate>
+              <mean>0.0</mean>
+              <stddev>2e-4</stddev>
+              <bias_mean>0.0000075</bias_mean>
+              <bias_stddev>0.0000008</bias_stddev>
+            </rate>
+            <accel>
+              <mean>0.0</mean>
+              <stddev>1.7e-2</stddev>
+              <bias_mean>0.1</bias_mean>
+              <bias_stddev>0.001</bias_stddev>
+            </accel>
+          </noise>
+        </imu>
+  </sensor>
+
+
+    </gazebo>
+
+    
+  
+
+
+  </xacro:macro>
+</robot>
+
